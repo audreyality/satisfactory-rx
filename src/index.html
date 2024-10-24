@@ -7,7 +7,42 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <section class="building">
+        <header><h1 class="kind">Smelter</h1></header><!-- Running, Waiting, Stopped -->
+        <dl class="report">
+          <dt><b class="status">Status</b></dt>
+          <dd><img class="status-light" src="status/running.png" /></dd>
+          
+          <dt><b class="stage">Stage</b></dt>
+          <dd><i class="loading">Loading</i></dd><!-- Cooking, Emptying-->
+          
+          <dt><b class="production-rate">Rate</b></dt>
+          <dd><output>5 / minute</meter></dd>
+          
+          <dt><b class="next-output">Next output</b></dt>
+          <dd><output class="time">4m 35s</output></dd>
+        </dl>
+        <img class="instance" src="" />
+        <dl class="input">
+          <dt><b class="resource-iron-ore">iron ore</b></dt>
+          <dd class="belt">
+            <meter min="0" max="5" value="1">1 / 5</meter>
+          </dd>
+          
+          <dt><b class="resource-power">power</b></dt>
+          <dd class="pole">
+            <i class="powered">Powered</meter>
+          </dd>
+        </ul>
+        <dl class="output">
+          <dt><b class="resource-iron-alloy">iron alloy</b></dt>
+          <dd class="belt">
+            <meter value="0">0</meter>
+          </dd>
+        </dl>
+      </section>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>
