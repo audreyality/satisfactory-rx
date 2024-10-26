@@ -14,7 +14,7 @@ export class StackLightsElement extends HTMLElement {
     private icon: Template;
 
     static get observedAttributes() {
-        return ["i", "tags", "super"];
+        return ["i", "tags", "super", "class"];
     }
 
     constructor() {

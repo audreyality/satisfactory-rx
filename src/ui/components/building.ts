@@ -11,7 +11,7 @@ const templateId = {
 }
 
 class BuildingElement extends HTMLElement implements Observer<Building> {
-    static readonly template = "./component.html" as FilePath;
+    static readonly template = "./building.html" as FilePath;
     private building: Template;
 
     static get observedAttributes() {

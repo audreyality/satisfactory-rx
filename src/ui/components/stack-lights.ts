@@ -89,6 +89,7 @@ export class StackLightsElement extends HTMLElement implements Observer<StackSta
         white?: HTMLElement,
     };
 }
+
 customElements.define("stack-lights", StackLightsElement);
 
 function wire(shadow: ShadowRoot) {
