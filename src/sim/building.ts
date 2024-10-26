@@ -3,6 +3,7 @@ import { Recipe, ResourceQty } from "./resource";
 import { FilePath } from "../system/file";
 import { Ticks } from "./ticks";
 import { Connection } from "./connection";
+import { ProductionStage, ProductionStatus } from "./production";
 
 export type BuildingId = Tagged<string, "building">
 
@@ -20,8 +21,8 @@ export type Building = {
     inputs: ResourceQty[],
     output?: ResourceQty,
     state: {
-        stage: "Loading" | "Processing" | "Emptying" | "Waiting",
-        status: "Running" | "Backpressure" | "Blocked" | "Stopped",
+        stage: ProductionStage,
+        status: ProductionStatus,
     },
     metrics: {
         countdown?: Ticks,
