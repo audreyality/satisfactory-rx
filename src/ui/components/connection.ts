@@ -100,7 +100,7 @@ export class ConnectionElement extends HTMLElement implements Observer<Connectio
     };
 }
 
-customElements.define("connection", ConnectionElement);
+customElements.define("connection", ConnectionElement, { extends: "li" });
 
 function wire(shadow: ShadowRoot) {
     const container = shadow.querySelector<HTMLElement>(".connection");

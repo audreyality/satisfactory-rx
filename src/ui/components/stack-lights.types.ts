@@ -1,4 +1,4 @@
-type LightBehavior = "on" | "blink" | "off";
+type LightBehavior = "steady" | "pulse" | "off";
 
 type StackStatus = {
     red: LightBehavior;
