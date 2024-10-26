@@ -1,5 +1,5 @@
 import { Tagged } from "type-fest";
-import { Recipe, ResourceQty } from "./resource";
+import { Recipe, ResourceQty } from "./production";
 import { FilePath } from "../system/file";
 import { Ticks } from "./ticks";
 import { Connection } from "./connection";

@@ -27,14 +27,3 @@ export type ResourceInfo = {
 export const Resources = Object.fromEntries(
     resources.map(r => [r.id, r])
 ) as Readonly<Record<Resource, ResourceInfo>>;
-
-export type ResourceQty = {
-    resource: Resource,
-    quantity: number
-}
-
-export type Recipe = {
-    requires: ResourceQty[],
-    produces: ResourceQty[],
-    throttle: Ticks
-}
