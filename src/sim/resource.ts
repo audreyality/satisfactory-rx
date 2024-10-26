@@ -1,5 +1,5 @@
 import { Connection } from "./connection";
-import { Ticks } from "../system/time";
+import { Ticks } from "./ticks";
 
 const resources = [
     {

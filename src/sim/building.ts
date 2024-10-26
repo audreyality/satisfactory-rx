@@ -1,7 +1,7 @@
 import { Tagged } from "type-fest";
 import { Recipe, ResourceQty } from "./resource";
 import { FilePath } from "../system/file";
-import { Ticks } from "../system/time";
+import { Ticks } from "./ticks";
 import { Connection } from "./connection";
 
 export type BuildingId = Tagged<string, "building">
