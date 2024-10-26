@@ -1,0 +1,51 @@
+<!doctype html>
+<template id="building">
+    <section class="building">
+        <header><h1 class="name">Smelter</h1></header><!-- Running, Waiting, Stopped -->
+        <dl class="report">
+            <dt><b class="status">Status</b></dt>
+            <dd>
+                <ul class="andon-lights">
+                    <li><i class="i-andon red off"></i></li>
+                    <li><i class="i-andon yellow off"></i></li>
+                    <li><i class="i-andon green on"></i></li>
+                    <li><i class="i-andon blue off"></i></li>
+                    <li><i class="i-andon white off"></i></li>
+                </ul>
+            </dd>
+            
+            <dt><b class="i-stage">Stage</b></dt>
+            <dd class="stage"><i class="i-loading">Loading</i></dd><!-- Cooking, Emptying-->
+            
+            <dt><b class="i-rate">Rate</b></dt>
+            <dd>
+                <meter class="rate" value="5" max="5">
+                every
+                <output class="duration">1m 25s</output>
+            </dd>
+            
+            <dt><b class="i-next-output">Next output</b></dt>
+            <dd class="next"><output class="i-countdown">4m 35s</output></dd>
+        </dl>
+        <img class="instance" src="~/public/building/smelter.png" />
+        <ul class="input">
+            <li class="connection">
+                <b class="i-resource-iron-ore">iron ore</b>
+                <i class="i-connection-belt">Belt</i>
+                <meter class="belt" min="0" max="5" value="1">1 / 5</meter>
+            </li>
+            
+            <li>
+                <b class="i-resource-power">power</b>
+                <i class="i-connection-pole powered">Powered Pole</i>
+            </li>
+        </ul>
+        <ul class="output">
+            <li class="connection">
+                <b class="i-resource-iron-alloy">iron alloy</b>
+                <i class="i-connection-belt">Belt</i>
+                <meter class="belt" value="0">0</meter>
+            </li>
+        </ul>
+      </section>
+</template>
