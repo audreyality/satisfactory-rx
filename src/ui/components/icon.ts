@@ -8,22 +8,23 @@ const templateId = {
     super: 'super-icon' as TemplateId,
 }
 
+type History<T> = { current: T, previous: T };
+
 export class StackLightsElement extends HTMLElement {
     static readonly templatePath = "./icon.html" as FilePath;
-    private _super: Template;
     private icon: Template;
 
     static get observedAttributes() {
-        return ["i", "tags", "super", "class"];
+        return ["i", "tags", "class"];
     }
 
     constructor() {
         super();
     }
 
-    i: string;
-    super: boolean;
-    tags: string[] = [];
+    private i: History<string> = { current: "", previous: "" };
+    private tags: History<string[]> = { current: [], previous: [] };
+    private classes: History<string[]> = { current: [], previous: [] };
 
     connectedCallback() {
         console.log("Custom element added to page.");
@@ -34,21 +35,12 @@ export class StackLightsElement extends HTMLElement {
         this.setTemplate();
     }
 
-    async loadTemplate() {
-        const ids = [templateId.icon, templateId.super] as const;
-        [this.icon, this._super] = await Promise.all(
-            ids.map((id) => Templates.get(id, StackLightsElement.templatePath))
-        );
+    private async loadTemplate() {
+        this.icon = await Templates.get(templateId.icon, StackLightsElement.templatePath);
     };
 
     private setTemplate() {
-
-        let content: Node;
-        if (this.super) {
-            content = this._super.content.cloneNode(true);
-        } else {
-            content = this.icon.content.cloneNode(true);
-        }
+        const content = this.icon.content.cloneNode(true);
         this.root.replaceChildren(content);
 
         this.elements = wire(this.root);
@@ -62,11 +54,64 @@ export class StackLightsElement extends HTMLElement {
         console.log("Custom element moved to new page.");
     }
 
+    attributeChangedCallback(name, oldValue, newValue) {
+        switch (name) {
+            case "i":
+                this.i = { previous: oldValue, current: newValue };
+                break;
+
+            case "tags":
+                this.tags = {
+                    previous: this.tags.current,
+                    current: newValue.split(' ')
+                };
+                break;
+
+            case "class":
+                this.classes = {
+                    previous: this.classes.current,
+                    current: newValue.split(' '),
+                };
+                break;
+        }
+
+        this.updateShadowDom();
+    }
+
+    private updateShadowDom() {
+        const old = toClasses(
+            this.i.previous,
+            this.tags.previous,
+            this.classes.previous
+        );
+        const next = toClasses(
+            this.i.current,
+            this.tags.current,
+            this.classes.current
+        );
+
+        const remove = old.filter(o => next.includes(o) || o === "");
+        const add = next.filter(n => old.includes(n) || n === "");
+
+        this.elements.inner.classList.add(...add);
+        this.elements.inner.classList.add(...remove);
+
+        this.elements.inner.innerText = icons[this.i.current].name;
+    }
+
     private readonly input = new ReplaySubject<StackStatus>(1);
     private root: ShadowRoot;
     private elements: {
         inner: HTMLElement,
     };
+}
+
+function toClasses(i: string, tags: string[], classes: string[]) {
+    const iClass: string = icons[i].css;
+    const tagClasses: string[] = tags.map(t => tags[t]);
+    const allClasses = [iClass, ...tagClasses, ...classes];
+
+    return allClasses;
 }
 
 function wire(shadow: ShadowRoot) {

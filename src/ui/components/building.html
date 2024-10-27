@@ -3,34 +3,34 @@
     <section class="building">
         <header class="name"><slot name="name">Smelter</slot></header><!-- Running, Waiting, Stopped -->
         <dl class="report">
-            <dt><icon i="status" super /></dt>
+            <dt><icon i="status" /></dt>
             <dd><stack-lights class="status" with="blue white" /></dd>
             
-            <dt><icon i="stage" super /></dt>
-            <dd class="stage"><icon i="loading" /></dd><!-- Cooking, Emptying-->
+            <dt><icon i="stage" /></dt>
+            <dd class="stage"><icon i="stage-loading" /></dd>
             
-            <dt><icon i="rate" super /></dt>
+            <dt><icon i="rate" /></dt>
             <dd>
                 <meter class="rate" value="5" max="5">
                 every
                 <output class="duration">1m 25s</output>
             </dd>
             
-            <dt><icon i="next-output" super /></dt>
+            <dt><icon i="next-output" /></dt>
             <dd class="next"><output class="i-countdown">4m 35s</output></dd>
         </dl>
         <img class="instance" src="~/public/building/smelter.png" />
         <ul class="input">
             <connection kind="belt" requires="5">
-                <icon i="resource-iron-ore" super />
+                <icon i="resource-iron-ore" />
             </connection>
             <connection kind="pole" requires="10">
-                <icon i="resource-power" tags="powered" super />
+                <icon i="resource-power" tags="powered" />
             </connection>
         </ul>
         <ul class="output">
             <connection kind="belt" produces="3">
-                <icon i="resource-iron-alloy" super />
+                <icon i="resource-iron-alloy" />
             </connection>
         </ul>
       </section>
