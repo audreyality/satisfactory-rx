@@ -1,8 +1,10 @@
-import { Observer, ReplaySubject } from "rxjs";
+import { Observer, ReplaySubject, Subject, takeUntil } from "rxjs";
 import { FilePath } from "../../system/file";
 import { Template, Templates } from "../template";
 import { TemplateId } from "../../system/host";
 import { Connection } from "../../sim/connection";
+import { InventoryError, InventoryReport } from "../../sim/production";
+import { Resources } from "../../sim/resource";
 
 const templateId = {
     belt: 'belt-connection' as TemplateId,
@@ -10,13 +12,15 @@ const templateId = {
     power: 'power-connection' as TemplateId
 }
 
-export class ConnectionElement extends HTMLElement implements Observer<Connection> {
+type Inventory = InventoryReport | InventoryError;
+
+export class ConnectionElement extends HTMLElement implements Observer<Inventory> {
     static readonly templatePath = "./connection.html" as FilePath;
     private belt: Template;
     private pipe: Template;
     private pole: Template;
 
-    kind: Connection;
+    private kind: Connection;
 
     static get observedAttributes() {
         return ["kind"];
@@ -24,18 +28,38 @@ export class ConnectionElement extends HTMLElement implements Observer<Connectio
 
     constructor() {
         super();
+
+        this.initializeRx();
     }
 
-    next(value: Connection) {
-        this.input.next(value);
+    private initializeRx() {
+        this.input.pipe(
+            takeUntil(this.disconnect$)
+        ).subscribe((status) => this.onInput(status))
+    }
+
+    next(value: Inventory) {
+        if (value.type !== "inventory") {
+            this.input.next(value);
+        }
     }
 
     error(err: unknown) {
+        if (!err || typeof err !== "object") {
+            return;
+        } else if ("type" in err && err.type === "inventory") {
+            this.input.next(err as Inventory);
+            return;
+        }
+
         this.input.error(err);
     }
 
     complete() {
         this.input.complete();
+
+        this.input = new ReplaySubject<Inventory>();
+        this.initializeRx();
     }
 
     connectedCallback() {
@@ -71,9 +95,25 @@ export class ConnectionElement extends HTMLElement implements Observer<Connectio
         this.elements = wire(this.root);
     }
 
+    private onInput(input: Inventory) {
+        if (input.kind !== "report") {
+            return;
+        }
+
+        const { icon } = Resources[input.resource];
+        this.elements.resource.setAttribute("i", icon);
+
+        if (this.elements.inventory) {
+            this.elements.inventory.max = input.target;
+            this.elements.inventory.value = input.current;
+        }
+    }
+
+    private disconnect$ = new Subject<void>();
 
     disconnectedCallback() {
         console.log("Custom element removed from page.");
+        this.disconnect$.next();
     }
 
     adoptedCallback() {
@@ -85,30 +125,27 @@ export class ConnectionElement extends HTMLElement implements Observer<Connectio
             this.kind = newValue;
             this.setTemplate();
         }
+
         console.log("Custom element attributes changed.");
     }
 
-    private templates: Record<string, string>;
-
-    private readonly input = new ReplaySubject<Connection>(1);
+    private input = new ReplaySubject<Inventory>(1);
     private root: ShadowRoot;
     private elements: {
         resource: HTMLElement,
-        container: HTMLElement,
         connection: HTMLElement,
-        queue?: HTMLMeterElement,
+        inventory?: HTMLMeterElement,
     };
 }
 
 customElements.define("connection", ConnectionElement, { extends: "li" });
 
 function wire(shadow: ShadowRoot) {
-    const container = shadow.querySelector<HTMLElement>(".connection");
+    const connection = shadow.querySelector<HTMLElement>(".connection");
 
     return {
-        container,
-        resource: shadow.querySelector<HTMLElement>("b[slot=resource]"),
-        connection: container.querySelector<HTMLElement>("i"),
-        queue: container.querySelector<HTMLMeterElement>("meter.queue"),
+        connection,
+        resource: connection.querySelector<HTMLElement>(".resource"),
+        inventory: connection.querySelector<HTMLMeterElement>(".queue"),
     };
 }

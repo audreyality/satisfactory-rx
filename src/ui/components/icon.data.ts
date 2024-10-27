@@ -25,6 +25,7 @@ const icons: Record<string, { css: string, name: string }> = {
     "resource-iron-ore": { css: "iconoir-", name: "" },
     "resource-power": { css: "iconoir-", name: "" },
     "resource-iron-alloy": { css: "iconoir-", name: "" },
+    "resource-water": { css: "iconoir-", name: "" },
 } as const;
 
 const tags: Record<string, string> = {

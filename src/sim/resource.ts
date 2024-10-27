@@ -4,16 +4,20 @@ import { Tick } from "./tick";
 const resources = [
     {
         id: "iron-ore",
-        connection: "belt"
+        connection: "belt",
+        icon: "resource-iron-ore",
     }, {
         id: "iron-alloy",
-        connection: "belt"
+        connection: "belt",
+        icon: "resource-iron-alloy",
     }, {
         id: "power",
-        connection: "pole"
+        connection: "pole",
+        icon: "resource-power",
     }, {
         id: "water",
-        connection: "pipe"
+        connection: "pipe",
+        icon: "resource-water",
     }
 ] as const;
 
@@ -21,6 +25,7 @@ export type Resource = typeof resources[number]["id"];
 
 export type ResourceInfo = {
     id: Resource,
+    icon: string,
     connection: Connection
 }
 

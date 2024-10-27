@@ -10,7 +10,7 @@ const templateId = {
 
 type History<T> = { current: T, previous: T };
 
-export class StackLightsElement extends HTMLElement {
+export class IconElement extends HTMLElement {
     static readonly templatePath = "./icon.html" as FilePath;
     private icon: Template;
 
@@ -36,7 +36,7 @@ export class StackLightsElement extends HTMLElement {
     }
 
     private async loadTemplate() {
-        this.icon = await Templates.get(templateId.icon, StackLightsElement.templatePath);
+        this.icon = await Templates.get(templateId.icon, IconElement.templatePath);
     };
 
     private setTemplate() {
@@ -105,6 +105,8 @@ export class StackLightsElement extends HTMLElement {
         inner: HTMLElement,
     };
 }
+
+customElements.define("icon", IconElement, { extends: "i" });
 
 function toClasses(i: string, tags: string[], classes: string[]) {
     const iClass: string = icons[i].css;

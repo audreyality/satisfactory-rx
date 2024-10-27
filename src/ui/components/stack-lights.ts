@@ -2,7 +2,7 @@ import { Observer, ReplaySubject, Subject, takeUntil } from "rxjs";
 import { TemplateId } from "../../system/host";
 import { FilePath } from "../../system/file";
 import { Template, Templates } from "../template";
-import { clock$ } from "../../simulator";
+import { IconElement } from "./icon";
 
 const templateId = {
     core: 'stack-lights' as TemplateId,
@@ -18,7 +18,7 @@ export class StackLightsElement extends HTMLElement implements Observer<StackSta
         return ["watch"];
     }
 
-    watch: OptionalLights[] = [];
+    private watch: OptionalLights[] = [];
 
     constructor() {
         super();
@@ -111,11 +111,11 @@ export class StackLightsElement extends HTMLElement implements Observer<StackSta
     private readonly input = new ReplaySubject<StackStatus>(1);
     private root: ShadowRoot;
     private elements: {
-        red: HTMLElement,
-        yellow: HTMLElement,
-        green: HTMLElement,
-        blue?: HTMLElement,
-        white?: HTMLElement,
+        red: IconElement,
+        yellow: IconElement,
+        green: IconElement,
+        blue?: IconElement,
+        white?: IconElement,
     };
 }
 
@@ -123,10 +123,10 @@ customElements.define("stack-lights", StackLightsElement);
 
 function wire(shadow: ShadowRoot) {
     return {
-        red: shadow.querySelector<HTMLElement>(".red")!,
-        yellow: shadow.querySelector<HTMLElement>(".yellow")!,
-        green: shadow.querySelector<HTMLElement>(".green")!,
-        blue: shadow.querySelector<HTMLElement>(".blue"),
-        white: shadow.querySelector<HTMLElement>(".white"),
+        red: shadow.querySelector<IconElement>(".red")!,
+        yellow: shadow.querySelector<IconElement>(".yellow")!,
+        green: shadow.querySelector<IconElement>(".green")!,
+        blue: shadow.querySelector<IconElement>(".blue"),
+        white: shadow.querySelector<IconElement>(".white"),
     };
 }
