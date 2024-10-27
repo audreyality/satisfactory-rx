@@ -1,5 +1,5 @@
 import { Resource } from "./resource";
-import { Ticks } from "./ticks";
+import { Tick } from "./tick";
 
 export type ProductionStage = "Loading" | "Processing" | "Emptying";
 export type ProductionStatus = "Running" | "Backpressure" | "Blocked" | "Stopped";
@@ -12,5 +12,5 @@ export type ResourceQty = {
 export type Recipe = {
     requires: ResourceQty[],
     produces: ResourceQty[],
-    throttle: Ticks
+    throttle: Tick
 };

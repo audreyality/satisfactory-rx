@@ -1,7 +1,7 @@
 import { Tagged } from "type-fest";
 import { Recipe, ResourceQty } from "./production";
 import { FilePath } from "../system/file";
-import { Ticks } from "./ticks";
+import { Tick } from "./tick";
 import { Connection } from "./connection";
 import { ProductionStage, ProductionStatus } from "./production";
 
@@ -25,7 +25,7 @@ export type Building = {
         status: ProductionStatus,
     },
     metrics: {
-        countdown?: Ticks,
-        rate: [number, Ticks], // number / Seconds
+        countdown?: Tick,
+        rate: [number, Tick], // number / Seconds
     },
 };

@@ -1,7 +1,8 @@
-import { Observer, ReplaySubject } from "rxjs";
+import { Observer, ReplaySubject, Subject, takeUntil } from "rxjs";
 import { TemplateId } from "../../system/host";
 import { FilePath } from "../../system/file";
 import { Template, Templates } from "../template";
+import { clock$ } from "../../simulator";
 
 const templateId = {
     core: 'stack-lights' as TemplateId,
@@ -18,6 +19,14 @@ export class StackLightsElement extends HTMLElement implements Observer<StackSta
     }
 
     watch: OptionalLights[] = [];
+
+    constructor() {
+        super();
+
+        this.input.pipe(
+            takeUntil(this.disconnect$)
+        ).subscribe((status) => this.onInput(status))
+    }
 
     next(value: StackStatus) {
         this.input.next(value);
@@ -60,17 +69,37 @@ export class StackLightsElement extends HTMLElement implements Observer<StackSta
         this.elements = wire(this.root);
     }
 
+    private onInput(status: StackStatus) {
+        function configure(element: HTMLElement, light: LightBehavior) {
+            element.setAttribute("tags", light);
+        }
+
+        configure(this.elements.red, status.red);
+        configure(this.elements.yellow, status.yellow);
+        configure(this.elements.green, status.green);
+
+        if (this.elements.blue) {
+            configure(this.elements.blue, status.blue);
+        }
+        if (this.elements.white) {
+            configure(this.elements.white, status.white);
+        }
+    }
+
+    private disconnect$ = new Subject<void>();
+
     disconnectedCallback() {
         console.log("Custom element removed from page.");
+        this.disconnect$.next();
     }
 
     adoptedCallback() {
         console.log("Custom element moved to new page.");
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "watch" && typeof newValue === "string") {
-            this.watch = newValue.split(' ').filter(
+    attributeChangedCallback(name, _current, next) {
+        if (name === "watch" && typeof next === "string") {
+            this.watch = next.split(' ').filter(
                 s => optionalLights.includes(s as any)
             ) as OptionalLights[];
 
